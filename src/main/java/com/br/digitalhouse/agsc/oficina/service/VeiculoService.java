@@ -1,5 +1,6 @@
 package com.br.digitalhouse.agsc.oficina.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,16 @@ public class VeiculoService {
 		return this.veiculoRepository.save(veiculo);
 	}
 	
-	public Veiculo update(Veiculo veiculo) {
-		Long id = Optional
-					.ofNullable(veiculo.getId())
-					.orElseThrow(() -> new RuntimeException("ID nulo"));
+	public Veiculo update(Veiculo novo) {
 	
-		return this.findById(id);
+		Veiculo antigo = this.findById(novo.getId());
+		
+		antigo.setCor(novo.getCor());
+		antigo.setMarca(novo.getMarca());
+		antigo.setModelo(novo.getModelo());
+		antigo.setPlaca(novo.getPlaca());
+		
+		return this.veiculoRepository.save(antigo);
 	}
 	
 	public Veiculo findById(Long id) {
@@ -41,5 +46,15 @@ public class VeiculoService {
 		
 		return this.veiculoRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Não foi possivel encontrar esse ID"));
+	}
+	
+	public List<Veiculo> findAll(){
+		return this.veiculoRepository.findAll();
+	}
+	
+	public void deleteById(Long id) {
+		this.findById(id);
+		
+		this.veiculoRepository.deleteById(id);
 	}
 }
