@@ -26,7 +26,8 @@ public class ClienteService {
 	
 	public Cliente update(Cliente novo) {
 	
-		Cliente antigo = this.findById(novo.getId());
+		Cliente antigo = this.findById(novo.getId())
+				.orElse(new Cliente());
 		
 		antigo.setNome(novo.getNome());
 		antigo.setVeiculos(novo.getVeiculos());
@@ -34,17 +35,13 @@ public class ClienteService {
 		return this.clienteRepository.save(antigo);
 	}
 	
-	public Cliente findById(Long id) {
-		Optional
-		.ofNullable(id)
-		.orElseThrow(() -> new RuntimeException("ID nulo"));
+	public Optional<Cliente> findById(Long id) {
 		
-		return this.clienteRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Não foi possivel encontrar esse ID"));
+		return this.clienteRepository.findById(id);
 	}
 	
-	public List<Cliente> findAll(){
-		return this.clienteRepository.findAll();
+	public Optional<List<Cliente>> findAll(){
+		return Optional.of(this.clienteRepository.findAll());
 	}
 	
 	public void deleteById(Long id) {

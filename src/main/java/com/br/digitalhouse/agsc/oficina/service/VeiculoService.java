@@ -1,27 +1,20 @@
 package com.br.digitalhouse.agsc.oficina.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.br.digitalhouse.agsc.oficina.model.Veiculo;
+import com.br.digitalhouse.agsc.oficina.repository.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.br.digitalhouse.agsc.oficina.model.Veiculo;
-import com.br.digitalhouse.agsc.oficina.repository.VeiculoRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VeiculoService {
 
-//	@Autowired
-//	private VeiculoRepository veiculoRepository;
-	
-	private final VeiculoRepository veiculoRepository;
-
 	@Autowired
-	public VeiculoService(VeiculoRepository veiculoRepository) {
-		this.veiculoRepository = veiculoRepository;
-	}
-	
+	private VeiculoRepository veiculoRepository;
+
+
 	public Veiculo create(Veiculo veiculo) {
 		veiculo.setId(null);
 		return this.veiculoRepository.save(veiculo);
@@ -29,7 +22,8 @@ public class VeiculoService {
 	
 	public Veiculo update(Veiculo novo) {
 	
-		Veiculo antigo = this.findById(novo.getId());
+		Veiculo antigo = this.findById(novo.getId())
+				.orElse(new Veiculo());
 		
 		antigo.setCor(novo.getCor());
 		antigo.setMarca(novo.getMarca());
@@ -39,17 +33,12 @@ public class VeiculoService {
 		return this.veiculoRepository.save(antigo);
 	}
 	
-	public Veiculo findById(Long id) {
-		Optional
-		.ofNullable(id)
-		.orElseThrow(() -> new RuntimeException("ID nulo"));
-		
-		return this.veiculoRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Não foi possivel encontrar esse ID"));
+	public Optional<Veiculo> findById(Long id) {
+		return this.veiculoRepository.findById(id);
 	}
 	
-	public List<Veiculo> findAll(){
-		return this.veiculoRepository.findAll();
+	public Optional<List<Veiculo>> findAll(){
+		return Optional.of(this.veiculoRepository.findAll());
 	}
 	
 	public void deleteById(Long id) {

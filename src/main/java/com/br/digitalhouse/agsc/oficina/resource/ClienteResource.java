@@ -22,18 +22,14 @@ import com.br.digitalhouse.agsc.oficina.service.ClienteService;
 @RequestMapping("/clientes")
 public class ClienteResource {
 
-	private final ClienteService clienteService;
-
 	@Autowired
-	public ClienteResource(ClienteService clienteService) {
-		this.clienteService = clienteService;
-	}
+	private ClienteService clienteService;
 	
 	@PostMapping
 	public ResponseEntity<?> create( @RequestBody Cliente cliente){
 		
 		cliente = this.clienteService.create(cliente);
-		
+
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
@@ -54,15 +50,16 @@ public class ClienteResource {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Cliente> findById(@PathVariable Long id){
-		Cliente cliente = this.clienteService.findById(id);
-	
-		return ResponseEntity.ok(cliente);
+		return this.clienteService.findById(id)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<Cliente>> findAll(){
-		List<Cliente> clientes = this.clienteService.findAll();
-		return ResponseEntity.ok(clientes);
+		return this.clienteService.findAll()
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@DeleteMapping("/{id}")
