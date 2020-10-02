@@ -22,13 +22,9 @@ import com.br.digitalhouse.agsc.oficina.service.VeiculoService;
 @RequestMapping("/veiculos")
 public class VeiculoResource {
 
-	private final VeiculoService veiculoService;
-
 	@Autowired
-	public VeiculoResource(VeiculoService veiculoService) {
-		this.veiculoService = veiculoService;
-	}
-	
+	private VeiculoService veiculoService;
+
 	@PostMapping
 	public ResponseEntity<?> create( @RequestBody Veiculo veiculo){
 		
@@ -50,19 +46,20 @@ public class VeiculoResource {
 		this.veiculoService.update(veiculo);
 		
 		return ResponseEntity.noContent().build();
-	};
+	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Veiculo> findById(@PathVariable Long id){
-		Veiculo veiculo = this.veiculoService.findById(id);
-	
-		return ResponseEntity.ok(veiculo);
+		return this.veiculoService.findById(id)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<Veiculo>> findAll(){
-		List<Veiculo> veiculos = this.veiculoService.findAll();
-		return ResponseEntity.ok(veiculos);
+		return this.veiculoService.findAll()
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@DeleteMapping("/{id}")
