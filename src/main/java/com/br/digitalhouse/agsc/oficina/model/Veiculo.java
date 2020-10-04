@@ -99,9 +99,4 @@ public class Veiculo {
 			return false;
 		return true;
 	}
-
-	
-	
-	
-	
 }

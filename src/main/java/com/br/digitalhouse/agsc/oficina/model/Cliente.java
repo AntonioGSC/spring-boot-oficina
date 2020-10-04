@@ -14,22 +14,22 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "clientes")
 public class Cliente {
-	
+
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
 	@Column(length = 60, nullable = false)
 	private String nome;
-	
+
 	@OneToMany
-	@JoinColumn(name="cliente_id")
+	@JoinColumn(name = "cliente_id")
 	private Set<Veiculo> veiculos = new HashSet<Veiculo>();
 
 	public Cliente() {
-		
+
 	}
-	
+
 	public Cliente(Long id, String nome, Set<Veiculo> veiculos) {
 		super();
 		this.id = id;
